@@ -17,7 +17,31 @@ exports.adminSignup = async (req, res) => {
   const file = req.body.image;  // Assuming the image is passed in req.body
   try {
    
+    function validatePhoneNumber(phone) {       
+      const pattern = /^(0|91)?\d{10}$/;
+       const isValid = pattern.test(phoneNumber);
+       
+       return isValid;
+   }
 
+   if(validatePhoneNumber(phone)){
+     return res.status(400).json({ message: 'This phone number is invalid' });
+   }
+
+     function validateEmail(email) {
+       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+       return emailRegex.test(email);
+     }
+
+     if(!validateEmail){
+       return res.status(400).json({ message: 'This email is invalid' });
+     }
+     
+
+     const existingEmail = await User.findOne({ email });
+     if (existingUser) {
+       return res.status(400).json({ message: 'This email already exists' });
+     }
     // Check if an admin already exists
     const adminExists = await User.findOne({ isAdmin: true });
     if (adminExists) {

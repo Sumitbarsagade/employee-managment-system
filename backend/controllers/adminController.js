@@ -34,6 +34,35 @@ const generateRandomPassword = () => {
       if (existingUser) {
         return res.status(400).json({ message: 'Username already exists' });
       }
+      
+
+      function validatePhoneNumber(phone) {       
+       const pattern = /^(0|91)?\d{10}$/;
+        const isValid = pattern.test(phoneNumber);
+        
+        return isValid;
+    }
+
+    if(validatePhoneNumber(phone)){
+      return res.status(400).json({ message: 'This phone number is invalid' });
+    }
+
+      function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+
+      if(!validateEmail){
+        return res.status(400).json({ message: 'This email is invalid' });
+      }
+      
+
+      const existingEmail = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: 'This email already exists' });
+      }
+
+
   
       // Generate random password for the employee
       const randomPassword = generateRandomPassword();
@@ -124,7 +153,34 @@ const generateRandomPassword = () => {
       if (!req.user.isAdmin) {
         return res.status(403).json({ message: 'Not authorized, Admin access only' });
       }
-  
+      
+
+      function validatePhoneNumber(phone) {       
+        const pattern = /^(0|91)?\d{10}$/;
+         const isValid = pattern.test(phoneNumber);
+         
+         return isValid;
+     }
+ 
+     if(validatePhoneNumber(phone)){
+       return res.status(400).json({ message: 'This phone number is invalid' });
+     }
+ 
+       function validateEmail(email) {
+         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+         return emailRegex.test(email);
+       }
+ 
+       if(!validateEmail){
+         return res.status(400).json({ message: 'This email is invalid' });
+       }
+       
+ 
+       const existingEmail = await User.findOne({ email });
+       if (existingUser) {
+         return res.status(400).json({ message: 'This email already exists' });
+       }
+       
       // Find the employee by ID
       const employee = await EmployeeDetails.findById(id);
       if (!employee) {
